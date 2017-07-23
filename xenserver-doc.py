@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# Clone openstack and keep the local copy up-to-date
-
+# Retrieve the newest documents of XenServer
 import pycurl,os
 from io import BytesIO
 from bs4 import BeautifulSoup
 
 buf = BytesIO()
-src_root = os.getcwd()
 
 curl = pycurl.Curl()
 curl.setopt(curl.URL, 'https://docs.citrix.com/en-us/xenserver/current-release.html')
@@ -25,5 +23,6 @@ for tag in soup.find_all(has_class):
 	doc_file = tag.a['href']
 	print(doc_file[doc_file.rindex('/')+1:])
 	os.system('wget -nv -c https://docs.citrix.com' + doc_file)
+	print(doc_file[doc_file.rindex('/')+1:], end='\n', file=update_log, flush=True)
 
 update_log.close()
